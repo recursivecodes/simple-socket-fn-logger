@@ -1,8 +1,8 @@
 name: simple-socket-fn-logger
 on:
   push:
-    branches:
-      - 'master'
+    tags:
+      - "v*"
 jobs:
   build-job:
     name: Build Job
