@@ -1,5 +1,7 @@
 # simple-socket-fn-logger
 
+![simple-socket-fn-logger](https://github.com/recursivecodes/simple-socket-fn-logger/workflows/simple-socket-fn-logger/badge.svg)
+
 ## About
 
 A simple socket server that can be used as a logging endpoint for your Oracle Functions! At bare minimum, it's a great tool to get near realtime logging for your Oracle Functions that are deployed in the Oracle Cloud. But it can be more than that! If you want, you can modify `Main.groovy` to persist your log data (maybe to a [free Autonomous DB instance](https://oracle.com/cloud/free))! The syslog format contains a log of data and this logger just outputs the message contents. You have access to a `Map` of data that looks like so:
