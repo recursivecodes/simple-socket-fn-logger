@@ -1,0 +1,36 @@
+plugins {
+    id 'idea'
+    id 'groovy'
+    id 'java'
+    id 'application'
+    id "com.github.johnrengelman.shadow" version "5.2.0"
+}
+
+group 'codes.recursive'
+
+mainClassName = 'codes.recursive.Main'
+
+configurations {
+    localGroovyConf
+}
+
+repositories {
+    mavenCentral()
+    maven { url "https://repo.spring.io/libs-release/" }
+}
+
+dependencies {
+    localGroovyConf localGroovy()
+    implementation("org.codehaus.groovy:groovy-all:3.0.4") {
+        exclude(group: 'org.codehaus.groovy', module: 'groovy-testng')
+    }
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    compile group: 'com.github.palindromicity', name: 'simple-syslog-5424', version: '0.0.7'
+}
+
+task runServer(dependsOn: 'classes', type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = mainClassName
+    systemProperties = System.getProperties()
+}

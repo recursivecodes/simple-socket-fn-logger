@@ -1,0 +1,57 @@
+name: simple-socket-fn-logger
+on:
+  push:
+    branches:
+      - 'master'
+jobs:
+  build-job:
+    name: Build Job
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+
+      - name: 'Setup Java 11'
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: 'Build JAR'
+        run: |
+          ./gradlew shadowJar
+
+      - name: 'Get Version Number'
+        run: |
+          echo "::set-env name=VERSION::$(./gradlew properties -q | grep "version:" | awk '{print $2}')"
+
+      - name: 'Publish JAR'
+        uses: actions/upload-artifact@v2-preview
+        with:
+          name: 'simple-socket-fn-logger-${{env.VERSION}}-all.jar'
+          path: build/libs/*-all.jar
+
+      - name: 'Create Release'
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{github.ref}}
+          release_name: Release ${{env.VERSION}}
+          body: |
+            Initial release
+          draft: false
+          prerelease: false
+
+      - name: 'Upload Release Asset'
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./simple-socket-fn-logger-${{env.VERSION}}-all.jar
+          asset_name: simple-socket-fn-logger-${{env.VERSION}}-all.jar
+          asset_content_type: application/java-archive
