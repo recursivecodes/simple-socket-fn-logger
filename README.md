@@ -54,7 +54,7 @@ java -jar simple-socket-fn-logger-[version]-all.jar
 This will start up a socket server on the default port of 30000. If you want to use a different port, pass it in:
 
 ```shell script
-java -jar simple-socket-fn-logger-[version]-all.jar
+java -jar -Dport=32000 simple-socket-fn-logger-[version]-all.jar
 ```
 
 >[!WARNING]
