@@ -31,7 +31,7 @@ You can use a pre-compiled version of this server, or compile it yourself.
 
 ### Pre-compiled
 
-Download the JAR file, place it in a directory and run the JAR (requires Java 11 JDK installed). See [Running The Server](#running-the-server).
+Download the [latest release](https://github.com/recursivecodes/simple-socket-fn-logger/releases), place it in a directory and run the JAR (requires Java 11 JDK installed). See [Running The Server](#running-the-server).
 
 ### Compiling
 
