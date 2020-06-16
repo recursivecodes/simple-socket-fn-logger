@@ -210,16 +210,18 @@ jobs:
 
       - name: 'Setup GraalVM'
         run: |
-          choco install zip unzip && choco install visualstudio2017-workload-vctools && curl -sL https://get.sdkman.io | bash && echo sdkman_auto_answer=true > '$HOME/.sdkman/etc/config' && echo sdkman_auto_selfupdate=true >> '$HOME/.sdkman/etc/config' && 'source $HOME/.sdkman/bin/sdkman-init.sh' && sdk install java 20.1.0.r11-grl
+          choco install zip unzip && choco install visualstudio2017-workload-vctools && curl -sL https://get.sdkman.io | bash && mkdir -p "$HOME/.sdkman/etc/ && echo sdkman_auto_answer=true > '$HOME/.sdkman/etc/config' && echo sdkman_auto_selfupdate=true >> '$HOME/.sdkman/etc/config' && 'source $HOME/.sdkman/bin/sdkman-init.sh' && sdk install java 20.1.0.r11-grl
         shell: bash
 
       - name: 'Install Graal Native Image'
         run: |
           gu.cmd install native-image
+        shell: bash
 
       - name: 'Get Version Number'
         run: |
           echo "::set-env name=VERSION::$(./gradlew properties -q | grep "version:" | awk '{print $2}')"
+        shell: bash
 
       - name: 'Get JAR Artifact'
         uses: actions/download-artifact@v2-preview
@@ -234,10 +236,12 @@ jobs:
       - name: 'Get Upload URL'
         run: |
           echo "::set-env name=UPLOAD_URL::$(cat upload_url.txt)"
+        shell: bash
 
       - name: 'Build Windows Image'
         run: |
-          native-image --no-server --no-fallback -H:ReflectionConfigurationResources=reflection-config.json -H:IncludeResources=logback.xml --allow-incomplete-classpath -jar simple-socket-fn-logger-${{env.VERSION}}-all.jar
+          native-image.cmd --no-server --no-fallback -H:ReflectionConfigurationResources=reflection-config.json -H:IncludeResources=logback.xml --allow-incomplete-classpath -jar simple-socket-fn-logger-${{env.VERSION}}-all.jar
+        shell: bash
 
       - name: 'Publish Windows Image'
         uses: actions/upload-artifact@v2-preview
