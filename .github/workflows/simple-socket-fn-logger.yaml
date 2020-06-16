@@ -4,8 +4,8 @@ on:
     tags:
       - "v*"
 jobs:
-  build-job:
-    name: Build Job
+  build-jar-job:
+    name: Build JAR Job
     runs-on: ubuntu-latest
 
     steps:
@@ -68,6 +68,7 @@ jobs:
           path: 'upload_url.txt'
 
   build-linux-image:
+    needs: [build-jar-job]
     name: Build Linux Image
     runs-on: ubuntu-latest
 
@@ -124,11 +125,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ env.UPLOAD_URL }}
-          asset_path: simple-socket-fn-logger-${{env.VERSION}}-linux
-          asset_name: simple-socket-fn-logger-${{env.VERSION}}-linux
-          asset_content_type: application/zip
+          asset_path: './simple-socket-fn-logger-${{env.VERSION}}-linux'
+          asset_name: 'simple-socket-fn-logger-${{env.VERSION}}-linux'
+          asset_content_type: application/octet-stream
 
   build-macos-image:
+    needs: [build-jar-job]
     name: Build macOS Image
     runs-on: macos-latest
 
@@ -170,7 +172,8 @@ jobs:
           path: 'simple-socket-fn-logger-${{env.VERSION}}-all'
 
   build-windows-image:
-    name: Build macOS Image
+    needs: [build-jar-job]
+    name: Build Windows Image
     runs-on: windows-latest
 
     steps:
