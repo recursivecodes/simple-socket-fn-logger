@@ -74,6 +74,10 @@ jobs:
         with:
           args: https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-20.1.0/graalvm-ce-java11-linux-amd64-20.1.0.tar.gz
 
+      - name: 'Install Native Image Plugin'
+        run: |
+          gu install native-image-agent
+
       - name: 'Get Version Number'
         run: |
           echo "::set-env name=VERSION::$(./gradlew properties -q | grep "version:" | awk '{print $2}')"
