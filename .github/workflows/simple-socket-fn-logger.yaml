@@ -5,7 +5,7 @@ on:
       - "v*"
 jobs:
   build-jar-job:
-    name: Build JAR Job
+    name: 'Build JAR'
     runs-on: ubuntu-latest
 
     steps:
@@ -69,7 +69,7 @@ jobs:
 
   build-linux-image:
     needs: [build-jar-job]
-    name: Build Linux Image
+    name: 'Build Linux Image'
     runs-on: ubuntu-latest
 
     steps:
@@ -106,7 +106,7 @@ jobs:
 
       - name: 'Get Upload URL'
         run: |
-          echo "::set-env name=UPLOAD_URL::$(more upload_url.txt)"
+          ls -la && echo "::set-env name=UPLOAD_URL::$(more upload_url.txt)" && echo ${{env.UPLOAD_URL}}
 
       - name: 'Build Linux Image'
         run: |
@@ -131,7 +131,7 @@ jobs:
 
   build-macos-image:
     needs: [build-jar-job]
-    name: Build macOS Image
+    name: 'Build macOS Image'
     runs-on: macos-latest
 
     steps:
@@ -193,7 +193,7 @@ jobs:
 
   build-windows-image:
     needs: [build-jar-job]
-    name: Build Windows Image
+    name: 'Build Windows Image'
     runs-on: windows-latest
 
     steps:
