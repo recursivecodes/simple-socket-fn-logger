@@ -76,7 +76,7 @@ jobs:
 
       - name: 'Install Native Image Plugin'
         run: |
-          gu install native-image-agent
+          gu install native-image
 
       - name: 'Get Version Number'
         run: |
