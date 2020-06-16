@@ -209,8 +209,9 @@ jobs:
           java-version: 11
 
       - name: 'Setup GraalVM'
-        uses: fnkr/github-action-git-bash@v1
-        args: ["bash", "-c", "choco install zip unzip && choco install visualstudio2017-workload-vctools && curl -sL https://get.sdkman.io | bash && echo sdkman_auto_answer=true > '$HOME/.sdkman/etc/config' && echo sdkman_auto_selfupdate=true >> '$HOME/.sdkman/etc/config' && 'source $HOME/.sdkman/bin/sdkman-init.sh' && sdk install java 20.1.0.r11-grl"]
+        run: |
+          choco install zip unzip && choco install visualstudio2017-workload-vctools && curl -sL https://get.sdkman.io | bash && echo sdkman_auto_answer=true > '$HOME/.sdkman/etc/config' && echo sdkman_auto_selfupdate=true >> '$HOME/.sdkman/etc/config' && 'source $HOME/.sdkman/bin/sdkman-init.sh' && sdk install java 20.1.0.r11-grl
+        shell: bash
 
       - name: 'Install Graal Native Image'
         run: |
