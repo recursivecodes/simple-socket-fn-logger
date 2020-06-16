@@ -69,10 +69,11 @@ jobs:
         with:
           java-version: 11
 
-      - name: 'Setup GraalVM'
-        uses: rtc11/setup-graalvm@master
+      - name: 'Setup GraalVM Environment'
+        uses: DeLaGuardo/setup-graalvm@2.0
         with:
-          args: https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-20.1.0/graalvm-ce-java11-linux-amd64-20.1.0.tar.gz
+          graalvm-version: '20.1.0.java11' // GraalVM version, no pattern syntax available atm.
+        run: java -version
 
       - name: 'Install Native Image Plugin'
         run: |
