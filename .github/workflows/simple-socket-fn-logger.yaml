@@ -108,21 +108,10 @@ jobs:
         run: |
           echo "::set-env name=UPLOAD_URL::$(cat upload_url.txt)"
 
-      - name: 'Foo'
-        run: |
-          echo ${{env.UPLOAD_URL}}
 
       - name: 'Build Linux Image'
         run: |
           native-image --no-server --no-fallback -H:ReflectionConfigurationResources=reflection-config.json -H:IncludeResources=logback.xml --allow-incomplete-classpath -jar simple-socket-fn-logger-${{env.VERSION}}-all.jar
-
-      - name: 'Foo2'
-        run: |
-          ls -la
-
-      - name: 'Foo2'
-        run: |
-          cat upload_url.txt
 
       - name: 'Publish Linux Image'
         uses: actions/upload-artifact@v2-preview
@@ -137,7 +126,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ env.UPLOAD_URL }}
-          asset_path: 'simple-socket-fn-logger-${{env.VERSION}}-linux'
+          asset_path: 'simple-socket-fn-logger-${{env.VERSION}}-all'
           asset_name: 'simple-socket-fn-logger-${{env.VERSION}}-linux'
           asset_content_type: application/octet-stream
 
@@ -181,7 +170,7 @@ jobs:
 
       - name: 'Get Upload URL'
         run: |
-          echo "::set-env name=UPLOAD_URL::$(more upload_url.txt)"
+          echo "::set-env name=UPLOAD_URL::$(cat upload_url.txt)"
 
       - name: 'Build macOS Image'
         run: |
@@ -200,7 +189,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ env.UPLOAD_URL }}
-          asset_path: 'simple-socket-fn-logger-${{env.VERSION}}-macos'
+          asset_path: 'simple-socket-fn-logger-${{env.VERSION}}-all'
           asset_name: 'simple-socket-fn-logger-${{env.VERSION}}-macos'
           asset_content_type: application/octet-stream
 
@@ -244,7 +233,7 @@ jobs:
 
       - name: 'Get Upload URL'
         run: |
-          echo "::set-env name=UPLOAD_URL::$(more upload_url.txt)"
+          echo "::set-env name=UPLOAD_URL::$(cat upload_url.txt)"
 
       - name: 'Build Windows Image'
         run: |
@@ -263,6 +252,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ env.UPLOAD_URL }}
-          asset_path: 'simple-socket-fn-logger-${{env.VERSION}}-windows.exe'
+          asset_path: 'simple-socket-fn-logger-${{env.VERSION}}-all'
           asset_name: 'simple-socket-fn-logger-${{env.VERSION}}-windows.exe'
           asset_content_type: application/octet-stream
