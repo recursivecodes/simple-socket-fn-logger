@@ -89,7 +89,7 @@ jobs:
 
       - name: 'Build Linux Image'
         run: |
-          native-image --no-server --no-fallback -H:ReflectionConfigurationResources=reflection-config.json -H:IncludeResources=logback.xml --allow-incomplete-classpath -jar simple-socket-fn-logger-${env.VERSION}-all.jar
+          native-image --no-server --no-fallback -H:ReflectionConfigurationResources=reflection-config.json -H:IncludeResources=logback.xml --allow-incomplete-classpath -jar simple-socket-fn-logger-${{env.VERSION}}-all.jar
 
       - name: 'Publish Linux Image'
         uses: actions/upload-artifact@v2-preview
