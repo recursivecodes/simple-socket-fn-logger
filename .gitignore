@@ -115,3 +115,5 @@ fabric.properties
 
 .idea
 .DS_Store
+native-images.md
+simple-socket-fn-logger-*
