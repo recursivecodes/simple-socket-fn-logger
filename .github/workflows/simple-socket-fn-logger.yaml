@@ -52,9 +52,20 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build/libs/simple-socket-fn-logger-${{env.VERSION}}-all.jar
-          asset_name: simple-socket-fn-logger-${{env.VERSION}}-all.jar
+          asset_path: build/libs/simple-socket-fn-logger-${{github.ref}}-all.jar
+          asset_name: simple-socket-fn-logger-${{github.ref}}-all.jar
           asset_content_type: application/java-archive
+
+
+      - name: 'Write Upload URL To File'
+        run: |
+          echo "${{ steps.create_release.outputs.upload_url }}" > upload_url.txt
+
+      - name: 'Publish Upload URL'
+          uses: actions/upload-artifact@v2-preview
+          with:
+            name: 'upload_url.txt'
+            path: 'upload_url.txt'
 
   build-linux-image:
     name: Build Linux Image
@@ -87,6 +98,15 @@ jobs:
         with:
           name: 'simple-socket-fn-logger-${{env.VERSION}}-all.jar'
 
+      - name: 'Get Release URL'
+        uses: actions/download-artifact@v2-preview
+        with:
+          name: 'upload_url.txt'
+
+      - name: 'Get Upload URL'
+          run: |
+            echo "::set-env name=UPLOAD_URL::more upload_url.txt"
+
       - name: 'Build Linux Image'
         run: |
           native-image --no-server --no-fallback -H:ReflectionConfigurationResources=reflection-config.json -H:IncludeResources=logback.xml --allow-incomplete-classpath -jar simple-socket-fn-logger-${{env.VERSION}}-all.jar
@@ -94,8 +114,19 @@ jobs:
       - name: 'Publish Linux Image'
         uses: actions/upload-artifact@v2-preview
         with:
-          name: 'simple-socket-fn-logger-${{env.VERSION}}-all'
+          name: 'simple-socket-fn-logger-${{env.VERSION}}-linux'
           path: 'simple-socket-fn-logger-${{env.VERSION}}-all'
+
+      - name: 'Upload Linux Image Asset'
+          id: upload-release-asset
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ env.UPLOAD_URL }}
+            asset_path: simple-socket-fn-logger-${{env.VERSION}}-linux
+            asset_name: simple-socket-fn-logger-${{env.VERSION}}-linux
+            asset_content_type: application/zip
 
   build-macos-image:
     name: Build macOS Image
@@ -135,6 +166,6 @@ jobs:
       - name: 'Publish macOS Image'
         uses: actions/upload-artifact@v2-preview
         with:
-          name: 'simple-socket-fn-logger-${{env.VERSION}}-all'
+          name: 'simple-socket-fn-logger-${{env.VERSION}}-macos'
           path: 'simple-socket-fn-logger-${{env.VERSION}}-all'
 
