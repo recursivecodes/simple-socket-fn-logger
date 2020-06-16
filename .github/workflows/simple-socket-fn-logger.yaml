@@ -95,5 +95,46 @@ jobs:
         uses: actions/upload-artifact@v2-preview
         with:
           name: 'simple-socket-fn-logger-${{env.VERSION}}-all'
-          path: simple-socket-fn-logger*
+          path: 'simple-socket-fn-logger-${{env.VERSION}}-all'
+
+  build-macos-image:
+    name: Build macOS Image
+    runs-on: macos-latest
+
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+
+      - name: 'Setup Java 11'
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: 'Setup GraalVM Environment'
+        uses: DeLaGuardo/setup-graalvm@2.0
+        with:
+          graalvm-version: '20.1.0.java11'
+
+      - name: 'Install Native Image Plugin'
+        run: |
+          gu install native-image
+
+      - name: 'Get Version Number'
+        run: |
+          echo "::set-env name=VERSION::$(./gradlew properties -q | grep "version:" | awk '{print $2}')"
+
+      - name: 'Get JAR Artifact'
+        uses: actions/download-artifact@v2-preview
+        with:
+          name: 'simple-socket-fn-logger-${{env.VERSION}}-all.jar'
+
+      - name: 'Build macOS Image'
+        run: |
+          native-image --no-server --no-fallback -H:ReflectionConfigurationResources=reflection-config.json -H:IncludeResources=logback.xml --allow-incomplete-classpath -jar simple-socket-fn-logger-${{env.VERSION}}-all.jar
+
+      - name: 'Publish macOS Image'
+        uses: actions/upload-artifact@v2-preview
+        with:
+          name: 'simple-socket-fn-logger-${{env.VERSION}}-all'
+          path: 'simple-socket-fn-logger-${{env.VERSION}}-all'
 
