@@ -208,14 +208,13 @@ jobs:
         with:
           java-version: 11
 
-      - name: 'Setup GraalVM Environment'
-        uses: DeLaGuardo/setup-graalvm@2.0
-        with:
-          graalvm-version: '20.1.0.java11'
-
-      - name: 'Install Native Image Plugin'
+      - name: 'Setup GraalVM'
         run: |
-          gu install native-image
+          choco install zip unzip && choco install visualstudio2017-workload-vctools && curl -sL https://get.sdkman.io | bash && mkdir -p "$HOME/.sdkman/etc/" && echo sdkman_auto_answer=true > "$HOME/.sdkman/etc/config" && echo sdkman_auto_selfupdate=true >> "$HOME/.sdkman/etc/config" && "source $HOME/.sdkman/bin/sdkman-init.sh" && sdk install java 20.0.0.r11-grl
+
+      - name: 'Install Graal Native Image'
+        run: |
+          gu.cmd install native-image
 
       - name: 'Get Version Number'
         run: |
