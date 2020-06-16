@@ -57,8 +57,8 @@ This will start up a socket server on the default port of 30000. If you want to 
 java -jar -Dport=32000 simple-socket-fn-logger-[version]-all.jar
 ```
 
->[!WARNING]
->Check firewall ports, routers, security lists, etc to make sure the port is open! 
+| WARNING: Check firewall ports, routers, security lists, etc to make sure the port is open! |
+| --- |
 
 This **can** be run on `localhost`, but your syslog URL must be your public IP and your router/firewall should forward the port as necessary!
 
