@@ -62,10 +62,10 @@ jobs:
           echo "${{ steps.create_release.outputs.upload_url }}" > upload_url.txt
 
       - name: 'Publish Upload URL'
-          uses: actions/upload-artifact@v2-preview
-          with:
-            name: 'upload_url.txt'
-            path: 'upload_url.txt'
+        uses: actions/upload-artifact@v2-preview
+        with:
+          name: 'upload_url.txt'
+          path: 'upload_url.txt'
 
   build-linux-image:
     name: Build Linux Image
