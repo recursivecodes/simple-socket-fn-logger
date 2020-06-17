@@ -6,7 +6,6 @@
 
 A simple socket server that can be used as a logging endpoint for your Oracle Functions! This can be run on your local machine, or wherever you want to run it (a cloud VM, etc). At bare minimum, it's a great tool to get near realtime logging for your Oracle Functions that are deployed in the Oracle Cloud. But it can be more than that! If you want, you can modify `MessageHandler.java` to persist your log data (maybe to a [free Autonomous DB instance](https://oracle.com/cloud/free))! The syslog format contains a log of data and this logger just outputs the message contents. You have access to a `Map` of data that looks like so:
 
-
 ```json
 {
     "syslog.header.appName": "app_id=ocid1.fnapp.oc1.phx...,fn_id=ocid1.fnfunc.oc1.phx...",
@@ -88,6 +87,9 @@ $ fn update app syslog-demo-app --syslog-url tcp://[your public IP]:[socket serv
 Or via the console:
 
 ![set syslog url via console](https://objectstorage.us-phoenix-1.oraclecloud.com/n/toddrsharp/b/readme-assets/o/2020-06-15_10-58-38.png)
+
+| WARNING: If your local server is not running, remove the `syslog` URL from your function to prevent getting the `Error invoking function. status: 502 message: Syslog endpoint unavailable` error! |
+| --- |
 
 It's worth repeating that this **can** be run on `localhost`, but your syslog URL must be your public IP and your router/firewall should forward the port as necessary!
 
