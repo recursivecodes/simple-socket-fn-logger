@@ -102,17 +102,17 @@ Here's what you'll see in your console when a function produces output. You'll f
 A `console.log()` and an exception:
 
 ```shell script
-Jun 16 12:18:46.060 [main] INFO  codes.recursive.Main - Listening on localhost:30000...
-Jun 16 12:19:07.154 [Thread-1] INFO  codes.recursive.Main - this is a console.log()
-Jun 16 12:19:07.154 [Thread-2] INFO  codes.recursive.Main - Error in function: ReferenceError: foo is not defined
-Jun 16 12:19:07.159 [Thread-2] INFO  codes.recursive.Main - at /function/func.js:11:3
-Jun 16 12:19:07.164 [Thread-2] INFO  codes.recursive.Main - at /function/node_modules/@fnproject/fdk/fn-fdk.js:299:26
-Jun 16 12:19:07.167 [Thread-2] INFO  codes.recursive.Main - at new Promise (<anonymous>)
-Jun 16 12:19:07.169 [Thread-2] INFO  codes.recursive.Main - at IncomingMessage.req.on.on (/function/node_modules/@fnproject/fdk/fn-fdk.js:297:7)
-Jun 16 12:19:07.172 [Thread-2] INFO  codes.recursive.Main - at IncomingMessage.emit (events.js:193:13)
-Jun 16 12:19:07.173 [Thread-2] INFO  codes.recursive.Main - at endReadableNT (_stream_readable.js:1139:12)
-Jun 16 12:19:07.175 [Thread-2] INFO  codes.recursive.Main - at processTicksAndRejections (internal/process/task_queues.js:81:17)
-Jun 16 12:19:07.177 [Thread-2] INFO  codes.recursive.Main - Error 502 : {"message":"Exception in function, consult logs for details","detail":"ReferenceError: foo is not defined"}
+Jun 16 12:18:46.060 - Listening on localhost:30000...
+Jun 16 12:19:07.154 - this is a console.log()
+Jun 16 12:19:07.154 - Error in function: ReferenceError: foo is not defined
+Jun 16 12:19:07.159 - at /function/func.js:11:3
+Jun 16 12:19:07.164 - at /function/node_modules/@fnproject/fdk/fn-fdk.js:299:26
+Jun 16 12:19:07.167 - at new Promise (<anonymous>)
+Jun 16 12:19:07.169 - at IncomingMessage.req.on.on (/function/node_modules/@fnproject/fdk/fn-fdk.js:297:7)
+Jun 16 12:19:07.172 - at IncomingMessage.emit (events.js:193:13)
+Jun 16 12:19:07.173 - at endReadableNT (_stream_readable.js:1139:12)
+Jun 16 12:19:07.175 - at processTicksAndRejections (internal/process/task_queues.js:81:17)
+Jun 16 12:19:07.177 - Error 502 : {"message":"Exception in function, consult logs for details","detail":"ReferenceError: foo is not defined"}
 ```
 
 #### Java
@@ -120,13 +120,13 @@ Jun 16 12:19:07.177 [Thread-2] INFO  codes.recursive.Main - Error 502 : {"messag
 A call to `System.out.println()` and an exception:
 
 ```shell script
-Jun 16 12:19:37.682 [main] INFO  codes.recursive.Main - Listening on localhost:30000...
-Jun 16 12:19:51.922 [Thread-1] INFO  codes.recursive.Main - This is System.out.println()
-Jun 16 12:19:51.930 [Thread-1] INFO  codes.recursive.Main - An error occurred in function: foo
-Jun 16 12:19:51.935 [Thread-1] INFO  codes.recursive.Main - Caused by: java.lang.Exception: foo
-Jun 16 12:19:51.941 [Thread-1] INFO  codes.recursive.Main - at com.example.fn.HelloFunction.handleRequest(HelloFunction.java:9)
-Jun 16 12:19:51.944 [Thread-1] INFO  codes.recursive.Main - at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-Jun 16 12:19:51.948 [Thread-1] INFO  codes.recursive.Main - at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
-Jun 16 12:19:51.951 [Thread-1] INFO  codes.recursive.Main - at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
-Jun 16 12:19:51.956 [Thread-1] INFO  codes.recursive.Main - at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+Jun 16 12:19:37.682 - Listening on localhost:30000...
+Jun 16 12:19:51.922 - This is System.out.println()
+Jun 16 12:19:51.930 - An error occurred in function: foo
+Jun 16 12:19:51.935 - Caused by: java.lang.Exception: foo
+Jun 16 12:19:51.941 - at com.example.fn.HelloFunction.handleRequest(HelloFunction.java:9)
+Jun 16 12:19:51.944 - at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+Jun 16 12:19:51.948 - at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+Jun 16 12:19:51.951 - at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+Jun 16 12:19:51.956 - at java.base/java.lang.reflect.Method.invoke(Unknown Source)
 ```
