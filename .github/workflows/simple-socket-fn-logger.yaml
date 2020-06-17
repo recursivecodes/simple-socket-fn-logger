@@ -239,7 +239,7 @@ jobs:
           JAVA_HOME: ./graalvm-ce-java11-20.1.0
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
-          ./graalvm-ce-java11-20.1.0/bin/native-image --no-server --no-fallback -H:ReflectionConfigurationResources=reflection-config.json -H:IncludeResources=logback.xml --allow-incomplete-classpath -jar -H:name=simple-socket-fn-logger-${{env.VERSION}}-all simple-socket-fn-logger-${{env.VERSION}}-all.jar
+          ./graalvm-ce-java11-20.1.0/bin/native-image --no-server --no-fallback -H:ReflectionConfigurationResources=reflection-config.json -H:IncludeResources=logback.xml --allow-incomplete-classpath -jar -H:name=logger simple-socket-fn-logger-${{env.VERSION}}-all.jar
 
       - name: 'Get Release URL'
         uses: actions/download-artifact@v2-preview
@@ -261,7 +261,7 @@ jobs:
         uses: actions/upload-artifact@v2-preview
         with:
           name: 'simple-socket-fn-logger-${{env.VERSION}}-windows.exe'
-          path: 'simple-socket-fn-logger-${{env.VERSION}}-all'
+          path: 'logger'
 
       - name: 'Upload Windows Image Asset'
         if: success()
@@ -271,6 +271,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ env.UPLOAD_URL }}
-          asset_path: 'simple-socket-fn-logger-${{env.VERSION}}-all'
+          asset_path: 'logger'
           asset_name: 'simple-socket-fn-logger-${{env.VERSION}}-windows'
           asset_content_type: application/octet-stream
