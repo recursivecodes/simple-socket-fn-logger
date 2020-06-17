@@ -114,12 +114,14 @@ jobs:
           native-image --no-server --no-fallback -H:ReflectionConfigurationResources=reflection-config.json -H:IncludeResources=logback.xml --allow-incomplete-classpath -jar simple-socket-fn-logger-${{env.VERSION}}-all.jar
 
       - name: 'Publish Linux Image'
+        if: success()
         uses: actions/upload-artifact@v2-preview
         with:
           name: 'simple-socket-fn-logger-${{env.VERSION}}-linux'
           path: 'simple-socket-fn-logger-${{env.VERSION}}-all'
 
       - name: 'Upload Linux Image Asset'
+        if: success()
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
@@ -177,12 +179,14 @@ jobs:
           native-image --no-server --no-fallback -H:ReflectionConfigurationResources=reflection-config.json -H:IncludeResources=logback.xml --allow-incomplete-classpath -jar simple-socket-fn-logger-${{env.VERSION}}-all.jar
 
       - name: 'Publish macOS Image'
+        if: success()
         uses: actions/upload-artifact@v2-preview
         with:
           name: 'simple-socket-fn-logger-${{env.VERSION}}-macos'
           path: 'simple-socket-fn-logger-${{env.VERSION}}-all'
 
       - name: 'Upload macOS Image Asset'
+        if: success()
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
@@ -199,34 +203,40 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - name: 'Download GraalVM'
+      - uses: actions/checkout@v1
+      run: |
+        Invoke-RestMethod -Uri https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-20.1.0/graalvm-ce-java11-windows-amd64-20.1.0.zip -OutFile 'graal.zip'
 
-      - name: 'Checkout'
-        uses: actions/checkout@v2
-
-      - name: 'Setup Java 11'
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-
-      - name: 'Setup GraalVM'
+      - name: 'Install GraalVM'
         run: |
-          choco install zip unzip && choco install visualstudio2017-workload-vctools && curl -sL https://get.sdkman.io | bash && mkdir -p "$HOME/.sdkman/etc/" && echo sdkman_auto_answer=true > "$HOME/.sdkman/etc/config" && echo sdkman_auto_selfupdate=true >> "$HOME/.sdkman/etc/config" && "source $HOME/.sdkman/bin/sdkman-init.sh" && sdk install java 20.1.0.r11-grl
-        shell: bash
+          Expand-Archive -path 'graal.zip' -destinationpath '.'
 
-      - name: 'Install Graal Native Image'
+      - name: 'Install Native Image'
         run: |
-          gu.cmd install native-image
-        shell: bash
+          graalvm-ce-java11-20.1.0\bin\gu.cmd install native-image
 
-      - name: 'Get Version Number'
+      - name: 'Set up Visual C Build Tools Workload for Visual Studio 2017 Build Tools'
         run: |
-          echo "::set-env name=VERSION::$(./gradlew properties -q | grep "version:" | awk '{print $2}')"
-        shell: bash
+          choco install visualstudio2017-workload-vctools
 
       - name: 'Get JAR Artifact'
         uses: actions/download-artifact@v2-preview
         with:
           name: 'simple-socket-fn-logger-${{env.VERSION}}-all.jar'
+
+      - name: 'Build Native Image'
+        shell: cmd
+        env:
+          JAVA_HOME: ./graalvm-ce-java11-20.1.0
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\VC\Auxiliary\Build\vcvars64.bat"
+          ./graalvm-ce-java11-20.1.0/bin/native-image --no-server --no-fallback -H:ReflectionConfigurationResources=reflection-config.json -H:IncludeResources=logback.xml --allow-incomplete-classpath -jar simple-socket-fn-logger-${{env.VERSION}}-all.jar
+
+      - name: 'Get Version Number'
+        run: |
+          echo "::set-env name=VERSION::$(./gradlew properties -q | grep "version:" | awk '{print $2}')"
+        shell: bash
 
       - name: 'Get Release URL'
         uses: actions/download-artifact@v2-preview
@@ -238,18 +248,15 @@ jobs:
           echo "::set-env name=UPLOAD_URL::$(cat upload_url.txt)"
         shell: bash
 
-      - name: 'Build Windows Image'
-        run: |
-          native-image.cmd --no-server --no-fallback -H:ReflectionConfigurationResources=reflection-config.json -H:IncludeResources=logback.xml --allow-incomplete-classpath -jar simple-socket-fn-logger-${{env.VERSION}}-all.jar
-        shell: bash
-
       - name: 'Publish Windows Image'
+        if: success()
         uses: actions/upload-artifact@v2-preview
         with:
           name: 'simple-socket-fn-logger-${{env.VERSION}}-windows.exe'
           path: 'simple-socket-fn-logger-${{env.VERSION}}-all'
 
       - name: 'Upload Windows Image Asset'
+        if: success()
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
@@ -257,5 +264,5 @@ jobs:
         with:
           upload_url: ${{ env.UPLOAD_URL }}
           asset_path: 'simple-socket-fn-logger-${{env.VERSION}}-all'
-          asset_name: 'simple-socket-fn-logger-${{env.VERSION}}-windows.exe'
+          asset_name: 'simple-socket-fn-logger-${{env.VERSION}}-windows'
           asset_content_type: application/octet-stream
