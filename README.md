@@ -44,16 +44,32 @@ This will create a runnable JAR in the `build/libs` directory.  See [Running The
 
 ### Running The Server
 
-To run the server:
+To run the server via the latest released JAR file:
 
 ```shell script
 java -jar simple-socket-fn-logger-[version]-all.jar
+```
+
+You may also use one of the provided native images. For example, if you downloaded the Mac OS native executable called `simple-socket-fn-logger-0.46-macos`, you would run it like so:
+
+| NOTE: Windows EXE native image is untested. If you would like to help out with Windows support, file a PR! |
+| --- |
+
+```shell script
+$ chmod +x simple-socket-fn-logger-0.46-macos
+$ ./simple-socket-fn-logger-0.46-macos
 ```
 
 This will start up a socket server on the default port of 30000. If you want to use a different port, pass it in:
 
 ```shell script
 java -jar -Dport=32000 simple-socket-fn-logger-[version]-all.jar
+```
+
+Native images also support passing in the port:
+
+```shell script
+$ ./simple-socket-fn-logger-0.46-macos -Dport=32000
 ```
 
 | WARNING: Check firewall ports, routers, security lists, etc to make sure the port is open! |
