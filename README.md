@@ -88,7 +88,7 @@ Or via the console:
 
 ![set syslog url via console](https://objectstorage.us-phoenix-1.oraclecloud.com/n/toddrsharp/b/readme-assets/o/2020-06-15_10-58-38.png)
 
-| WARNING: If your local server is not running, remove the `syslog` URL from your function to prevent getting the `Error invoking function. status: 502 message: Syslog endpoint unavailable` error! |
+| WARNING: If your server is not running, remove the `syslog` URL from your function to prevent getting the `Error invoking function. status: 502 message: Syslog endpoint unavailable` error! |
 | --- |
 
 It's worth repeating that this **can** be run on `localhost`, but your syslog URL must be your public IP and your router/firewall should forward the port as necessary!
