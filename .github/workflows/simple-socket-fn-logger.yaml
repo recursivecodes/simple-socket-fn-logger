@@ -3,6 +3,9 @@ on:
   push:
     tags:
       - "v*"
+    branches:
+      - 'master'
+
 jobs:
   build-jar-job:
     name: 'Build JAR'
@@ -33,6 +36,7 @@ jobs:
           path: build/libs/*-all.jar
 
       - name: 'Create Release'
+        if: contains(github.ref, "v")
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -46,6 +50,7 @@ jobs:
           prerelease: false
 
       - name: 'Upload Release Asset'
+        if: contains(github.ref, "v")
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
@@ -58,10 +63,12 @@ jobs:
 
 
       - name: 'Write Upload URL To File'
+        if: contains(github.ref, "v")
         run: |
           echo "${{ steps.create_release.outputs.upload_url }}" > upload_url.txt
 
       - name: 'Publish Upload URL'
+        if: contains(github.ref, "v")
         uses: actions/upload-artifact@v2-preview
         with:
           name: 'upload_url.txt'
@@ -126,8 +133,8 @@ jobs:
           name: 'simple-socket-fn-logger-${{env.VERSION}}-${{matrix.label}}'
           path: 'simple-socket-fn-logger-${{env.VERSION}}-all'
 
-      - name: 'Upload Native Image Asset'
-        if: success()
+      - name: 'Release Native Image Asset'
+        if: success() && contains(github.ref, "v")
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
@@ -192,11 +199,6 @@ jobs:
           echo "::set-env name=UPLOAD_URL::$(cat upload_url.txt)"
         shell: bash
 
-      - name: 'Where is the file?'
-        run: |
-          ls -la
-        shell: bash
-
       - name: 'Publish Windows Image'
         if: success()
         uses: actions/upload-artifact@v2-preview
@@ -204,8 +206,8 @@ jobs:
           name: 'simple-socket-fn-logger-${{env.VERSION}}-windows.exe'
           path: 'simple-socket-fn-logger-${{env.VERSION}}-all.exe'
 
-      - name: 'Upload Windows Image Asset'
-        if: success()
+      - name: 'Release Windows Image Asset'
+        if: success() && contains(github.ref, "v")
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
