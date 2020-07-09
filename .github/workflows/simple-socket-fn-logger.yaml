@@ -78,13 +78,14 @@ jobs:
     name: 'Build Non-Windows Image'
     needs: [build-jar-job]
     strategy:
-      os: ['ubuntu-latest', 'macos-latest']
+      matrix:
+        os: ['ubuntu-latest', 'macos-latest']
+        include:
+          - os: 'ubuntu-latest'
+            label: 'linux'
+          - os: 'macos-latest'
+            label: 'mac'
     runs-on: ${{ matrix.os }}
-    include:
-      - os: 'ubuntu-latest'
-        label: 'linux'
-      - os: 'macos-latest'
-        label: 'mac'
 
     steps:
       - name: 'Checkout'
