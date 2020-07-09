@@ -56,7 +56,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          upload_url: ${{steps.create_release.outputs.upload_url}}
           asset_path: build/libs/simple-socket-fn-logger-${{env.VERSION}}-all.jar
           asset_name: simple-socket-fn-logger-${{env.VERSION}}-all.jar
           asset_content_type: application/java-archive
@@ -65,7 +65,7 @@ jobs:
       - name: 'Write Upload URL To File'
         if: contains(github.ref, 'v')
         run: |
-          echo "${{ steps.create_release.outputs.upload_url }}" > upload_url.txt
+          echo "${{steps.create_release.outputs.upload_url}}" > upload_url.txt
 
       - name: 'Publish Upload URL'
         if: contains(github.ref, 'v')
@@ -85,7 +85,7 @@ jobs:
             label: 'linux'
           - os: 'macos-latest'
             label: 'mac'
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{matrix.os}}
 
     steps:
       - name: 'Checkout'
@@ -115,11 +115,13 @@ jobs:
           name: 'simple-socket-fn-logger-${{env.VERSION}}-all.jar'
 
       - name: 'Get Release URL'
+        if: contains(github.ref, 'v')
         uses: actions/download-artifact@v2-preview
         with:
           name: 'upload_url.txt'
 
       - name: 'Get Upload URL'
+        if: contains(github.ref, 'v')
         run: |
           echo "::set-env name=UPLOAD_URL::$(cat upload_url.txt)"
 
@@ -141,7 +143,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
-          upload_url: ${{ env.UPLOAD_URL }}
+          upload_url: ${{env.UPLOAD_URL}}
           asset_name: 'simple-socket-fn-logger-${{env.VERSION}}-${{matrix.label}}'
           asset_path: 'simple-socket-fn-logger-${{env.VERSION}}-all'
           asset_content_type: application/octet-stream
@@ -191,11 +193,13 @@ jobs:
           ./graalvm-ce-java11-20.1.0/bin/native-image --no-server --no-fallback -H:ReflectionConfigurationResources=reflection-config.json -H:IncludeResources=logback.xml -H:Name=simple-socket-fn-logger-${{env.VERSION}}-all --allow-incomplete-classpath -jar simple-socket-fn-logger-${{env.VERSION}}-all.jar
 
       - name: 'Get Release URL'
+        if: contains(github.ref, 'v')
         uses: actions/download-artifact@v2-preview
         with:
           name: 'upload_url.txt'
 
       - name: 'Get Upload URL'
+        if: contains(github.ref, 'v')
         run: |
           echo "::set-env name=UPLOAD_URL::$(cat upload_url.txt)"
         shell: bash
@@ -214,7 +218,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
-          upload_url: ${{ env.UPLOAD_URL }}
+          upload_url: ${{env.UPLOAD_URL}}
           asset_name: 'simple-socket-fn-logger-${{env.VERSION}}-windows.exe'
           asset_path: 'simple-socket-fn-logger-${{env.VERSION}}-all.exe'
           asset_content_type: application/octet-stream
