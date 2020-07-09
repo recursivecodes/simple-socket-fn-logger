@@ -36,7 +36,7 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
           tag_name: ${{github.ref}}
           release_name: Release ${{github.ref}}
@@ -49,7 +49,7 @@ jobs:
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: build/libs/simple-socket-fn-logger-${{env.VERSION}}-all.jar
@@ -67,10 +67,17 @@ jobs:
           name: 'upload_url.txt'
           path: 'upload_url.txt'
 
-  build-linux-image:
+  build-non-windows-image:
+    name: 'Build Non-Windows Image'
     needs: [build-jar-job]
-    name: 'Build Linux Image'
-    runs-on: ubuntu-latest
+    strategy:
+      os: ['ubuntu-latest', 'macos-latest']
+    runs-on: ${{ matrix.os }}
+    include:
+      - os: 'ubuntu-latest'
+        label: 'linux'
+      - os: 'macos-latest'
+        label: 'mac'
 
     steps:
       - name: 'Checkout'
@@ -108,95 +115,29 @@ jobs:
         run: |
           echo "::set-env name=UPLOAD_URL::$(cat upload_url.txt)"
 
-
-      - name: 'Build Linux Image'
+      - name: 'Build Native Image'
         run: |
           native-image --no-server --no-fallback -H:ReflectionConfigurationResources=reflection-config.json -H:IncludeResources=logback.xml --allow-incomplete-classpath -jar simple-socket-fn-logger-${{env.VERSION}}-all.jar
 
-      - name: 'Publish Linux Image'
+      - name: 'Publish Native Image'
         if: success()
         uses: actions/upload-artifact@v2-preview
         with:
-          name: 'simple-socket-fn-logger-${{env.VERSION}}-linux'
+          name: 'simple-socket-fn-logger-${{env.VERSION}}-${{matrix.label}}'
           path: 'simple-socket-fn-logger-${{env.VERSION}}-all'
 
-      - name: 'Upload Linux Image Asset'
+      - name: 'Upload Native Image Asset'
         if: success()
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
           upload_url: ${{ env.UPLOAD_URL }}
-          asset_name: 'simple-socket-fn-logger-${{env.VERSION}}-linux'
+          asset_name: 'simple-socket-fn-logger-${{env.VERSION}}-${{matrix.label}}'
           asset_path: 'simple-socket-fn-logger-${{env.VERSION}}-all'
           asset_content_type: application/octet-stream
-
-  build-macos-image:
-    needs: [build-jar-job]
-    name: 'Build Mac OS Image'
-    runs-on: macos-latest
-
-    steps:
-
-      - name: 'Checkout'
-        uses: actions/checkout@v2
-
-      - name: 'Setup Java 11'
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-
-      - name: 'Setup GraalVM Environment'
-        uses: DeLaGuardo/setup-graalvm@2.0
-        with:
-          graalvm-version: '20.1.0.java11'
-
-      - name: 'Install Native Image Plugin'
-        run: |
-          gu install native-image
-
-      - name: 'Get Version Number'
-        run: |
-          echo "::set-env name=VERSION::$(./gradlew properties -q | grep "version:" | awk '{print $2}')"
-
-      - name: 'Get JAR Artifact'
-        uses: actions/download-artifact@v2-preview
-        with:
-          name: 'simple-socket-fn-logger-${{env.VERSION}}-all.jar'
-
-      - name: 'Get Release URL'
-        uses: actions/download-artifact@v2-preview
-        with:
-          name: 'upload_url.txt'
-
-      - name: 'Get Upload URL'
-        run: |
-          echo "::set-env name=UPLOAD_URL::$(cat upload_url.txt)"
-
-      - name: 'Build Mac OS Image'
-        run: |
-          native-image --no-server --no-fallback -H:ReflectionConfigurationResources=reflection-config.json -H:IncludeResources=logback.xml --allow-incomplete-classpath -jar simple-socket-fn-logger-${{env.VERSION}}-all.jar
-
-      - name: 'Publish Mac OS Image'
-        if: success()
-        uses: actions/upload-artifact@v2-preview
-        with:
-          name: 'simple-socket-fn-logger-${{env.VERSION}}-macos'
-          path: 'simple-socket-fn-logger-${{env.VERSION}}-all'
-
-      - name: 'Upload Mac OS Image Asset'
-        if: success()
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ env.UPLOAD_URL }}
-          asset_name: 'simple-socket-fn-logger-${{env.VERSION}}-macos'
-          asset_path: 'simple-socket-fn-logger-${{env.VERSION}}-all'
-          asset_content_type: application/octet-stream
-
+            
   build-windows-image:
     needs: [build-jar-job]
     name: 'Build Windows Image'
@@ -268,7 +209,7 @@ jobs:
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
           upload_url: ${{ env.UPLOAD_URL }}
           asset_name: 'simple-socket-fn-logger-${{env.VERSION}}-windows.exe'
